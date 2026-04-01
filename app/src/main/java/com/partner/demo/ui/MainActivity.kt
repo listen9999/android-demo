@@ -20,7 +20,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val apiService by lazy { NetworkModule.create<com.partner.demo.network.PartnerApiService>() }
+    private var apiService: com.partner.demo.network.PartnerApiService? = null
 
     private var pendingTransactionId: String? = null
 
@@ -30,6 +30,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupViews()
+        updateCurrentUrlDisplay()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 每次返回时重新初始化API服务（可能URL已更改）
+        apiService = NetworkModule.create<com.partner.demo.network.PartnerApiService>()
+        updateCurrentUrlDisplay()
     }
 
     private fun setupViews() {
@@ -41,6 +49,17 @@ class MainActivity : AppCompatActivity() {
         binding.btnTransfer.setOnClickListener {
             initiateTransfer()
         }
+
+        // 设置按钮
+        binding.btnSettings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun updateCurrentUrlDisplay() {
+        val url = NetworkModule.getCurrentUrl()
+        binding.tvCurrentUrl.text = "服务地址: $url"
     }
 
     private fun initiateTransfer() {
@@ -66,8 +85,9 @@ class MainActivity : AppCompatActivity() {
         // 调用API
         lifecycleScope.launch {
             try {
+                val service = apiService ?: NetworkModule.create<com.partner.demo.network.PartnerApiService>()
                 val request = TransferRequest(cardNumber, amount, currency)
-                val response = apiService.initiateTransfer(request)
+                val response = service.initiateTransfer(request)
 
                 handleTransferResponse(response)
 

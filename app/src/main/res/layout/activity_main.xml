@@ -20,21 +20,56 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="合作伙伴转账"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="合作伙伴转账"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="安全交易系统演示"
+                    android:textColor="#E0FFFFFF"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <!-- 设置按钮 -->
+            <ImageButton
+                android:id="@+id/btnSettings"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_manage"
+                android:tint="@android:color/white"
+                android:contentDescription="设置" />
+
+        </LinearLayout>
+
+        <!-- 当前服务地址 -->
         <TextView
+            android:id="@+id/tvCurrentUrl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="安全交易系统演示"
-            android:textColor="#E0FFFFFF"
-            android:textSize="14sp" />
+            android:layout_marginTop="12dp"
+            android:textColor="#B0FFFFFF"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

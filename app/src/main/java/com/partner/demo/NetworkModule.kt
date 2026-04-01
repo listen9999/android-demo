@@ -1,6 +1,7 @@
 package com.partner.demo
 
 import android.content.Context
+import com.partner.demo.util.SettingsManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,12 +10,14 @@ import java.util.concurrent.TimeUnit
 
 object NetworkModule {
 
-    private const val BASE_URL = "http://10.0.2.2:8081/"  // Android模拟器访问localhost
-
+    private var baseUrl: String = SettingsManager.DEFAULT_URL
     private var _retrofit: Retrofit? = null
     val retrofit: Retrofit get() = _retrofit!!
 
     fun init(context: Context) {
+        // 从设置中读取URL
+        baseUrl = SettingsManager.getBackendUrl(context)
+
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -27,11 +30,20 @@ object NetworkModule {
             .build()
 
         _retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
+    // 更新URL并重新初始化
+    fun updateUrl(context: Context, newUrl: String) {
+        baseUrl = newUrl
+        SettingsManager.setBackendUrl(context, newUrl)
+        init(context)
+    }
+
+    fun getCurrentUrl(): String = baseUrl
 
     inline fun <reified T> create(): T {
         return retrofit.create(T::class.java)
